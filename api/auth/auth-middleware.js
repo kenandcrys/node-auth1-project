@@ -1,6 +1,5 @@
 const express = require('express');
-const session = require('express-session')
-
+const User = require('../users/users-model')
 /*
   If the user does not have a session saved in the server
 
@@ -10,9 +9,9 @@ const session = require('express-session')
   }
 */
 function restricted(req, res, next) {
-  if (!req.session || !req.session.user) {
-    return res.status(401).json({ message: "You shall not pass!" });
-  }
+  // if (!req.session || !req.session.user) {
+  //   return res.status(401).json({ message: "You shall not pass!" });
+  // }
   next();
 }
 
@@ -24,8 +23,14 @@ function restricted(req, res, next) {
     "message": "Username taken"
   }
 */
-function checkUsernameFree(req, res, next) {
-  next();
+async function checkUsernameFree(req, res, next) {
+  try {
+    const user = await User.findBy({ username: req.body.username });
+    if(!user.length) next();
+    else next({ status:422, "message": "Username taken" })
+  } catch(err) {
+    next(err)
+  }
 }
 
 /*
