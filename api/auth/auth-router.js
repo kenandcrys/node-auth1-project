@@ -24,7 +24,10 @@ const md = require('./auth-middleware')
     "message": "Password must be longer than 3 chars"
   }
  */
-router.post('/register',md.checkPasswordLength, md.checkUsernameFree, (req, res, next) => {
+router.post('/register', 
+  md.checkPasswordLength,
+  md.checkUsernameFree,
+  (req, res, next) => {
   res.json('register')
 })
 

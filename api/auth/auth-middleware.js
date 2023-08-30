@@ -1,4 +1,3 @@
-const express = require('express');
 const User = require('../users/users-model')
 /*
   If the user does not have a session saved in the server
