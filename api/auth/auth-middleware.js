@@ -13,13 +13,12 @@ function restricted(req, res, next) {
   } else {
     next({
       status: 401,
-      message: "You shall no pass!"
+      message: "you shall not pass!"
     })
   }
   // if (!req.session || !req.session.user) {
   //   return res.status(401).json({ message: "You shall not pass!" });
   // }
-  next();
 }
 
 /*
