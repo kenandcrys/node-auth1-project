@@ -6,8 +6,28 @@ const store = require('connect-session-knex')(session)
 const userRoutes = require('./users/users-router')
 const useAuth = require('./auth/auth-router')
 const server = express();
+const knex = require('../data/db-config')
 
+server.use(session({
+  name: 'chocolatechip',
+  secret: 'ssh',
+  saveUninitialized: false,
+  resae: false,
+  store: new Store({
+    knex,
+    createTable: true,
+    clearInterval: 1000 * 60 * 10,
+    tablename: 'sessions',
+    sidfieldname: 'sid',
+  }),
+  cookie: {
+    maxage: 1000 * 60 * 10,
+    secure: false,
+    httpOnly: true,
+    // sameSite: 'none'
+  }
 
+}))
 server.use(helmet());
 server.use(express.json());
 server.use(cors());
