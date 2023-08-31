@@ -1,7 +1,9 @@
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
 // middleware functions from `auth-middleware.js`. You will need them here!
 const router = require('express').Router();
-const md = require('./auth-middleware')
+const bcrypt = require('bcryptjs');
+const md = require('./auth-middleware');
+const User = require('../users/users-model');
 /**
   1 [POST] /api/auth/register { "username": "sue", "password": "1234" }
 
@@ -28,7 +30,13 @@ router.post('/register',
   md.checkPasswordLength,
   md.checkUsernameFree,
   (req, res, next) => {
-  res.json('register')
+  const { username, password } = req.body;
+  const hashedPassword = bcrypt.hashSync( password, 10 )
+  User.add({ username, password: hashedPassword })
+    .then(saved => {
+      res.status(201).json(saved)
+    })
+    .catch(next)
 })
 
 /**
